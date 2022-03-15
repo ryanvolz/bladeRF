@@ -451,6 +451,10 @@ target_link_libraries(libbladerf_shared ${LIBBLADERF_LIBS})
 # Adjust our output name
 set_target_properties(libbladerf_shared PROPERTIES OUTPUT_NAME bladeRF)
 
+if(MSVC)
+    set_target_properties(libbladerf_shared PROPERTIES RUNTIME_OUTPUT_NAME "bladeRF-${VERSION_INFO_MAJOR}")
+endif()
+
 # Set shared library version
 set_target_properties(libbladerf_shared PROPERTIES SOVERSION ${VERSION_INFO_MAJOR})
 
@@ -477,6 +481,9 @@ set(LIBBLADERF_PC_LIBDIR \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
 set(LIBBLADERF_PC_INCLUDEDIR \${prefix}/include)
 set(LIBBLADERF_PC_VERSION ${VERSION})
 set(LIBBLADERF_PC_LIBS "-lbladeRF")
+if(MSVC)
+    set(LIBBLADERF_PC_LIBS "-lbladeRF-${VERSION_INFO_MAJOR}")
+endif()
 
 # Use space-delimiter in the .pc file, rather than CMake's semicolon separator
 string(REPLACE ";" " " LIBBLADERF_PC_CFLAGS "${LIBBLADERF_PC_CFLAGS}")
