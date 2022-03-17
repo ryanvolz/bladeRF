@@ -230,7 +230,9 @@ add_custom_target(uninstall
 ################################################################################
 # Windows-only, Post build: Copy libraries to our build output directory
 ################################################################################
-if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+option(BUNDLE_EXTERNAL_LIBRARIES "Copy external libraries to the build output directory" ON)
+
+if(BUNDLE_EXTERNAL_LIBRARIES AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
     if(LIBUSB_FOUND)
         set(WIN_RUNTIME_ITEMS ${WIN_RUNTIME_ITEMS}
             "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/licenses/libusb/COPYING"
@@ -386,4 +388,4 @@ if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
 
     add_custom_target(win_runtime ALL DEPENDS ${WIN_RUNTIME_ITEMS})
 
-endif(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+endif(BUNDLE_EXTERNAL_LIBRARIES AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
