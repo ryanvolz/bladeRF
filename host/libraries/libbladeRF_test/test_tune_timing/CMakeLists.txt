@@ -20,14 +20,14 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         ${BLADERF_HOST_COMMON_SOURCE_DIR}/conversions.c
     )
 
-    if(LIBC_VERSION)
-        # clock_gettime() was moved from librt -> libc in 2.17
-        if(${LIBC_VERSION} VERSION_LESS "2.17")
-            set(CLI_LINK_LIBRARIES ${CLI_LINK_LIBRARIES} rt)
-        endif()
-    endif()
-
     include_directories(${INCLUDES})
     add_executable(libbladeRF_test_tune_timing ${SRC})
     target_link_libraries(libbladeRF_test_tune_timing libbladerf_shared)
+
+    if(LIBC_VERSION)
+        # clock_gettime() was moved from librt -> libc in 2.17
+        if(${LIBC_VERSION} VERSION_LESS "2.17")
+            target_link_libraries(libbladeRF_test_tune_timing rt)
+        endif()
+    endif()
 endif()
