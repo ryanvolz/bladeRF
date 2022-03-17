@@ -226,12 +226,18 @@ add_custom_target(uninstall
 ################################################################################
 # Windows-only, Post build: Copy libraries to our build output directory
 ################################################################################
-if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+option(BUNDLE_EXTERNAL_LIBRARIES "Copy external libraries to the build output directory" ON)
+
+if(BUNDLE_EXTERNAL_LIBRARIES AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
     find_package(LibPThreadsWin32)
     if(LIBPTHREADSWIN32_FOUND)
         set(WIN_RUNTIME_ITEMS ${WIN_RUNTIME_ITEMS}
                 "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/licenses/pthreads-win32/COPYING.LIB.txt"
                 "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/pthreadVC2.dll")
+
+        if(NOT EXISTS ${LIBPTHREADSWIN32_LIB_COPYING})
+            message(FATAL_ERROR "Unable to find pthread-win32 COPYING.LIB file")
+        endif()
 
         add_custom_command(
             OUTPUT "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/licenses/pthreads-win32/COPYING.LIB.txt"
@@ -405,4 +411,4 @@ if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
 
     add_custom_target(win_runtime ALL DEPENDS ${WIN_RUNTIME_ITEMS})
 
-endif(WIN32 AND NOT CMAKE_CROSSCOMPILING)
+endif(BUNDLE_EXTERNAL_LIBRARIES AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
